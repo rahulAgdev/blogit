@@ -18,6 +18,7 @@
 .imageContainer{
     flex: 1;
     height: 500px;
+    
     position: relative;
 
 }
@@ -29,6 +30,7 @@
 }
 .image{
     object-fit: cover;
+    border-radius: 20px;
 }
 
 .postTitle{
@@ -48,3 +50,34 @@
     width: max-content;
     border: none;
 }   
+
+
+@media screen and (max-width: 1280px) {
+    .title{
+        font-size: 72px;
+    }
+    
+}
+
+@media screen and (max-width: 1024px) {
+    .title{
+        font-size: 64px;
+    }
+
+    .imageContainer{
+        display: none;
+    }
+    
+}
+@media screen and (max-width: 768px) {
+    .title{
+        font-size: 48px;
+    }
+
+    
+}
+@media screen and (max-width: 640px) {
+    .title{
+        font-size: 36px;
+    }
+}

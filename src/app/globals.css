@@ -1,7 +1,7 @@
 :root{
     --bg: white;
     --textColor : black;
-    --softBg: #f0f0f0
+    --softBg: #f0f0f0;
     --softTextColor: #626262
 }
 *{
@@ -29,8 +29,8 @@ a{
 .light{
     --bg: white;
     --textColor : black;
-    --softBg: #f0f0f0
-    --softTextColor: #626262
+    --softBg: #f0f0f0;
+    --softTextColor: #626262;
 }
 .container{
     min-height: 100vh;

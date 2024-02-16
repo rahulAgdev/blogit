@@ -8,11 +8,7 @@ const AuthLinks = () => {
   const {data, status} = useSession();
 
    return (
-    // <div className={styles.container}>
-
-    // </div>
-
-    <>
+        <>
       {status === "unauthenticated" ? (
         <Link href="/login" className={styles.link}>
           Login

@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation'
 const LogInPage = () => {
   const router = useRouter();
   const {data,status} = useSession();
-  console.log("data  : ", data)
-  console.log("status : ", status)
   if(status==='loading'){
     return <div>Loading</div>
   }

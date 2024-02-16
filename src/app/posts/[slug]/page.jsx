@@ -3,9 +3,7 @@ import styles from "./singlePage.module.css";
 import Image from "next/image";
 import Comments from "../../../../components/comments/Comments";
 const getData = async (slug) => {
-  const res = await fetch(`http://localhost:3000/api/posts/${slug}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(`http://localhost:3000/api/posts/${slug}`);
   if (!res.ok) {
     throw new Error("failed to fetch categories");
   }

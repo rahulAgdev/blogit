@@ -4,9 +4,7 @@ import Pagination from "../pagination/Pagination";
 import Image from "next/image";
 import Card from "../card/Card";
 const getData = async (page, cat) => {
-  const res = await fetch(`http://localhost:3000/api/posts?page=${page}&cat=${cat||""}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(`http://localhost:3000/api/posts?page=${page}&cat=${cat||""}`);
   if (!res.ok) {
     throw new Error("failed to fetch categories");
   }

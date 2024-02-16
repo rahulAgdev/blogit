@@ -3,8 +3,8 @@ import styles from "./cardlist.module.css";
 import Pagination from "../pagination/Pagination";
 import Image from "next/image";
 import Card from "../card/Card";
-const getData = async () => {
-  const res = await fetch("http://localhost:3000/api/posts", {
+const getData = async (page) => {
+  const res = await fetch(`http://localhost:3000/api/posts?page=${[page]}`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -12,16 +12,19 @@ const getData = async () => {
   }
   return res.json();
 };
-const CardList = async () => {
-  const date = await getData()
+
+const CardList = async ({ page }) => {
+  const {posts, count} = await getData(page);
+  const POST_PER_PAGE = 2;
+  const hasPrev  = POST_PER_PAGE*(page-1) > 0
+  const hasNext = POST_PER_PAGE * (page-1) + POST_PER_PAGE < count;
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Recent Posts</h1>
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Pagination />
+      {posts?.map((item) => (
+        <Card key={item._id} item={item} />
+      ))}
+      <Pagination page={page} hasPrev={hasPrev} hasNext={hasNext}/>
     </div>
   );
 };

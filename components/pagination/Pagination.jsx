@@ -1,10 +1,13 @@
+'use client'
 import React from 'react'
 import styles from './pagination.module.css'
-const Pagination = () => {
+import { useRouter } from 'next/navigation'
+const Pagination = ({page, hasPrev, hasNext}) => {
+  const router = useRouter();
   return (
     <div className={styles.container}>
-      <button className={styles.button}>Prev</button>
-      <button className={styles.button}>Next</button>
+      <button disabled={!hasPrev} className={styles.button} onClick={()=>router.push(`?page=${page-1}`)}>Prev</button>
+      <button disabled={!hasNext} className={styles.button} onClick={()=>router.push(`?page=${page+1}`)}>Next</button>
     </div>
   )
 }

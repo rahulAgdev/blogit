@@ -13,7 +13,6 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "@/utils/firebase";
-import ReactQuill from "react-quill";
 
 const WritePage = () => {
   const { status } = useSession();
@@ -25,7 +24,7 @@ const WritePage = () => {
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [catSlug, setCatSlug] = useState("");
-
+  const ReactQuill = dynamic(()=>import('react-quill'),{ssr:false})
   useEffect(() => {
     const storage = getStorage(app);
     const upload = () => {

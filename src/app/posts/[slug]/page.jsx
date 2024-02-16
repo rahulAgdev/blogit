@@ -14,6 +14,7 @@ const getData = async (slug) => {
 };
 const SinglePage = async ({ params }) => {
   const { slug } = params;
+  // console.log("Data is : ", data);
   const data = await getData(slug);
   return (
     <div className={styles.container}>
@@ -33,7 +34,7 @@ const SinglePage = async ({ params }) => {
           </div>
         </div>
         {data.img && <div className={styles.imageContainer}>
-          <Image src="/p1.jpeg" alt="" fill className={styles.image} />
+          <Image src={data.img} alt="" fill className={styles.image} />
         </div>}
       </div>
       <div className={styles.content}>
@@ -47,7 +48,7 @@ const SinglePage = async ({ params }) => {
             <Comments postSlug={slug}/>
           </div>
         </div>
-        <Menu />
+        {/* <Menu /> */}
       </div>
     </div>
   );

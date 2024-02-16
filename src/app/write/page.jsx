@@ -1,37 +1,35 @@
 "use client";
+
+import Image from "next/image";
+import styles from "./write.module.css";
+import { useEffect, useState } from "react";
+import "react-quill/dist/quill.bubble.css";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-
-import { useEffect, useState } from "react";
-import styles from "./write.module.css";
-import Image from "next/image";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.bubble.css";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { app } from "@/utils/firebase";
-const storage = getStorage(app);
-const Write = () => {
+import ReactQuill from "react-quill";
+
+const WritePage = () => {
+  const { status } = useSession();
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
   const [file, setFile] = useState(null);
   const [media, setMedia] = useState("");
+  const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
-  const router = useRouter();
-  const { status } = useSession();
-  if (status === "loading") {
-    return <div>Loading</div>;
-  }
-  if (status === "unauthenticated") {
-    router.push("/");
-  }
+  const [catSlug, setCatSlug] = useState("");
+
   useEffect(() => {
+    const storage = getStorage(app);
     const upload = () => {
-      const name = new Date().getTime + file.name;
+      const name = new Date().getTime() + file.name;
       const storageRef = ref(storage, name);
 
       const uploadTask = uploadBytesResumable(storageRef, file);
@@ -59,15 +57,26 @@ const Write = () => {
         }
       );
     };
-    file && upload;
+
+    file && upload();
   }, [file]);
+
+  if (status === "loading") {
+    return <div className={styles.loading}>Loading...</div>;
+  }
+
+  if (status === "unauthenticated") {
+    router.push("/");
+  }
+
   const slugify = (str) =>
     str
       .toLowerCase()
       .trim()
       .replace(/[^\w\s-]/g, "")
-      .replace(/[\s_-]*/g, "-")
+      .replace(/[\s_-]+/g, "-")
       .replace(/^-+|-+$/g, "");
+
   const handleSubmit = async () => {
     const res = await fetch("/api/posts", {
       method: "POST",
@@ -76,11 +85,17 @@ const Write = () => {
         desc: value,
         img: media,
         slug: slugify(title),
-
+        catSlug: catSlug || "style", //If not selected, choose the general category
       }),
     });
-    console.log(res);
+
+    if (res.status === 200) {
+      const data = await res.json();
+      console.log(data);
+      router.push(`/posts/${data.slug}`);
+    }
   };
+
   return (
     <div className={styles.container}>
       <input
@@ -89,11 +104,16 @@ const Write = () => {
         className={styles.input}
         onChange={(e) => setTitle(e.target.value)}
       />
+      <select className={styles.select} onChange={(e) => setCatSlug(e.target.value)}>
+        <option value="style">style</option>
+        <option value="fashion">fashion</option>
+        <option value="food">food</option>
+        <option value="culture">culture</option>
+        <option value="travel">travel</option>
+        <option value="coding">coding</option>
+      </select>
       <div className={styles.editor}>
-        <button
-          className={styles.button}
-          onClick={() => setOpen((prev) => !prev)}
-        >
+        <button className={styles.button} onClick={() => setOpen(!open)}>
           <Image src="/plus.png" alt="" width={16} height={16} />
         </button>
         {open && (
@@ -104,7 +124,6 @@ const Write = () => {
               onChange={(e) => setFile(e.target.files[0])}
               style={{ display: "none" }}
             />
-
             <button className={styles.addButton}>
               <label htmlFor="image">
                 <Image src="/image.png" alt="" width={16} height={16} />
@@ -123,7 +142,7 @@ const Write = () => {
           theme="bubble"
           value={value}
           onChange={setValue}
-          placeholder=" Start typing ... "
+          placeholder="Tell your story..."
         />
       </div>
       <button className={styles.publish} onClick={handleSubmit}>
@@ -133,4 +152,4 @@ const Write = () => {
   );
 };
 
-export default Write;
+export default WritePage;
